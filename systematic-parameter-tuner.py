@@ -30,7 +30,7 @@ from torch.optim.lr_scheduler import StepLR
 
 
 from helpers import *
-from models import MNISTNet, HashedMNISTNetDecimal, HashedMNISTNetBinary
+from models import MNISTNet, HashedMNISTNetDecimal, HashedMNISTNetBinary, DeeperHashedMNISTNetBinary
 
 
 transform = transforms.Compose([
@@ -44,8 +44,8 @@ dataset2_mnist = datasets.MNIST('./data_mnist', train=False,
                     transform=transform)
 
 
-bitsizes = [1, 2, 4, 8, 16, 32]
-num_hash_tables = [1, 5, 10, 15, 20, 30, 50, 100]
+bitsizes = []
+num_hash_tables = []
 
 first_network_results = {}
 for b in bitsizes:
@@ -68,10 +68,39 @@ for b in bitsizes:
 
 
 print(first_network_results)
+model = MNISTNet()
+run_default(dataset1_mnist, dataset2_mnist, model)
+
+
+bitsizes = [8, 32]
+num_hash_tables = [10, 30, 50]
+
+second_network_results = {}
+for b in bitsizes:
+    for n in num_hash_tables:
+        print("*"*80)
+        print("Bitsize: " + str(b) + ", num_hash_tables: " + str(n))
+        model = DeeperHashedMNISTNetBinary(n, b)
+        train_loader_hashed_mnist, test_loader_hashed_mnist, times = preprocess_binary(b, n, dataset1_mnist, dataset2_mnist)
+        training_time, accuracy, num_params = run_hashed_model(train_loader_hashed_mnist, test_loader_hashed_mnist, model)
+        if b not in second_network_results:
+            second_network_results[b] = {}
+        second_network_results[b][n] = {'preprocessing_time': sum(times), 'training_time': training_time,
+                                        'accuracy': accuracy, 'num_params': num_params}
+        print(second_network_results[b][n])
+        print("*"*80)
+
+        with open('results_deeper.txt', 'a') as f:
+            f.write(json.dumps(second_network_results[b][n]))
+            f.write('\n')
+
+
+print(second_network_results)
 
 
 
-# run_default(dataset1_mnist, dataset2_mnist)
+
+
 #
 # train_loader_hashed_mnist, test_loader_hashed_mnist, times = preprocess_decimal(8, 20, dataset1_mnist, dataset2_mnist)
 # print('Total preprocessing time: '  + str(sum(times)) + ' seconds.')

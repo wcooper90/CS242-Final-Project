@@ -68,9 +68,9 @@ def test_mnist(model, device, test_loader):
     return accuracy
 
 
-def run_default(dataset1_mnist, dataset2_mnist):
+def run_default(dataset1_mnist, dataset2_mnist, model):
 
-    model = MNISTNet()
+    model = model
     device = torch.device("cpu")
 
     transform=transforms.Compose([
@@ -88,12 +88,14 @@ def run_default(dataset1_mnist, dataset2_mnist):
 
     scheduler = StepLR(optimizer, step_size=1, gamma=.1)
 
-    for epoch in range(1, 2):
+    for epoch in range(1, 5):
         train_mnist(model, device, train_loader_mnist, optimizer, epoch)
         test_mnist(model, device, test_loader_mnist)
         scheduler.step()
 
     total_time = time.time() - start_time
+    num_params = sum(p.numel() for p in model.parameters())
+    print('total default network parameters: ' + str(num_params))
     print('Total default network training time: {} seconds'.format(total_time))
 
 

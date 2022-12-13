@@ -1,2 +1,1 @@
-{"preprocessing_time": 98.07478666305542, "training_time": 490.2819290161133, "accuracy": 74.09, "num_params": 5258}
-{"preprocessing_time": 128.76862740516663, "training_time": 247.69964861869812, "accuracy": 76.6, "num_params": 6538}
+

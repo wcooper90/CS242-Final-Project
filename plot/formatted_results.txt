@@ -1,0 +1,59 @@
+Bitsize=1, num_hash_tables = [1, 5, 10, 15, 20, 30, 50, 100]
+{"preprocessing_time": 13.020060062408447, "training_time": 178.09451246261597, "accuracy": 17.51, "num_params": 1546}
+{"preprocessing_time": 36.522465467453, "training_time": 202.48221683502197, "accuracy": 29.67, "num_params": 2058}
+{"preprocessing_time": 55.1021192073822, "training_time": 191.65153312683105, "accuracy": 40.84, "num_params": 2698}
+{"preprocessing_time": 76.62981915473938, "training_time": 201.15165901184082, "accuracy": 53.31, "num_params": 3338}
+{"preprocessing_time": 143.7784764766693, "training_time": 202.99092078208923, "accuracy": 60.32, "num_params": 3978}
+{"preprocessing_time": 180.6837124824524, "training_time": 201.111656665802, "accuracy": 72.43, "num_params": 5258}
+{"preprocessing_time": 224.7032880783081, "training_time": 195.63792204856873, "accuracy": 81.5, "num_params": 7818}
+{"preprocessing_time": 425.3461363315582, "training_time": 220.6562376022339, "accuracy": 90.09, "num_params": 14218}
+
+Bitsize=2, num_hash_tables = [1, 5, 10, 15, 20, 30, 50, 100]
+{"preprocessing_time": 16.365954160690308, "training_time": 195.10217380523682, "accuracy": 21.26, "num_params": 1674}
+{"preprocessing_time": 36.97890090942383, "training_time": 225.70659184455872, "accuracy": 36.41, "num_params": 2698}
+{"preprocessing_time": 64.01614665985107, "training_time": 236.92742085456848, "accuracy": 64.56, "num_params": 3978}
+{"preprocessing_time": 98.07478666305542, "training_time": 240, "accuracy": 74.09, "num_params": 5258}
+{"preprocessing_time": 128.76862740516663, "training_time": 247.69964861869812, "accuracy": 76.6, "num_params": 6538}
+{"preprocessing_time": 202.55737209320068, "training_time": 315.81698179244995, "accuracy": 85.04, "num_params": 9098}
+{"preprocessing_time": 344.3361346721649, "training_time": 304.06118083000183, "accuracy": 91.03, "num_params": 14218}
+{"preprocessing_time": 591.862390756607, "training_time": 421.73492074012756, "accuracy": 93.62, "num_params": 27018}
+
+Bitsize=4, num_hash_tables = [1, 5, 10, 15, 20, 30, 50, 100]
+{"preprocessing_time": 19.581863164901733, "training_time": 255.12524580955505, "accuracy": 23.66, "num_params": 1930}
+{"preprocessing_time": 44.48192238807678, "training_time": 248.91277718544006, "accuracy": 64.2, "num_params": 3978}
+{"preprocessing_time": 71.32104063034058, "training_time": 244.86978387832642, "accuracy": 80.56, "num_params": 6538}
+{"preprocessing_time": 102.77567028999329, "training_time": 247.64717173576355, "accuracy": 86.12, "num_params": 9098}
+{"preprocessing_time": 124.12540817260742, "training_time": 290.31701612472534, "accuracy": 88.59, "num_params": 11658}
+{"preprocessing_time": 204.5121500492096, "training_time": 342.6029486656189, "accuracy": 91.38, "num_params": 16778}
+{"preprocessing_time": 287.9677903652191, "training_time": 315.188440322876, "accuracy": 93.86, "num_params": 27018}
+{"preprocessing_time": 436.18531131744385, "training_time": 402.57910990715027, "accuracy": 95.11, "num_params": 52618}
+
+Bitsize=8, num_hash_tables = [1, 5, 10, 15, 20, 30, 50, 100]
+{"preprocessing_time": 16.09594702720642, "training_time": 175.95346331596375, "accuracy": 35.1, "num_params": 2442}
+{"preprocessing_time": 34.647316694259644, "training_time": 197.00381660461426, "accuracy": 79.73, "num_params": 6538}
+{"preprocessing_time": 69.17504048347473, "training_time": 225.46726202964783, "accuracy": 88.44, "num_params": 11658}
+{"preprocessing_time": 88.98372840881348, "training_time": 239.7724573612213, "accuracy": 91.22, "num_params": 16778}
+{"preprocessing_time": 95.5677399635315, "training_time": 261.6180577278137, "accuracy": 92.48, "num_params": 21898}
+{"preprocessing_time": 156.14404153823853, "training_time": 367, "accuracy": 94.29, "num_params": 32138}
+{"preprocessing_time": 220.52058124542236, "training_time": 419.6241645812988, "accuracy": 95.6, "num_params": 52618}
+{"preprocessing_time": 513.6743409633636, "training_time": 970.0336587429047, "accuracy": 95.48, "num_params": 103818}
+
+Bitsize=16, num_hash_tables = [1, 5, 10, 15, 20, 30, 50, 100]
+{"preprocessing_time": 28.495976209640503, "training_time": 176.66441082954407, "accuracy": 58.99, "num_params": 3466}
+{"preprocessing_time": 52.35955095291138, "training_time": 245.08747053146362, "accuracy": 87.66, "num_params": 11658}
+{"preprocessing_time": 97.19262313842773, "training_time": 245.10657119750977, "accuracy": 92.47, "num_params": 21898}
+{"preprocessing_time": 126.3914532661438, "training_time": 344.63034081459045, "accuracy": 94.28, "num_params": 32138}
+{"preprocessing_time": 298.4654631614685, "training_time": 452.5528094768524, "accuracy": 95.19, "num_params": 42378}
+{"preprocessing_time": 328.41868901252747, "training_time": 444.8156933784485, "accuracy": 95.94, "num_params": 62858}
+{"preprocessing_time": 376.21612668037415, "training_time": 723.7525084018707, "accuracy": 95.51, "num_params": 103818}
+{"preprocessing_time": 1173.4595954418182, "training_time": 1444.4337048530579, "accuracy": 96.23, "num_params": 206218}
+
+Bitsize=32, num_hash_tables = [1, 5, 10, 15, 20, 30, 50, 100]
+{"preprocessing_time": 34.877174615859985, "training_time": 202.56379199028015, "accuracy": 74.85, "num_params": 5514}
+{"preprocessing_time": 97.33803868293762, "training_time": 290.20723581314087, "accuracy": 93.31, "num_params": 21898}
+{"preprocessing_time": 146.74544620513916, "training_time": 402.28615283966064, "accuracy": 94.61, "num_params": 42378}
+{"preprocessing_time": 234.75876593589783, "training_time": 550.4914247989655, "accuracy": 95.82, "num_params": 62858}
+{"preprocessing_time": 304.26072669029236, "training_time": 690.3132288455963, "accuracy": 95.77, "num_params": 83338}
+{"preprocessing_time": 454.05532693862915, "training_time": 930.8967010974884, "accuracy": 95.49, "num_params": 124298}
+{"preprocessing_time": 756.1271066665649, "training_time": 1038.3160254955292, "accuracy": 95.78, "num_params": 206218}
+{"preprocessing_time": 1659.1222722530365, "training_time": 1955.1843197345734, "accuracy": 95.92, "num_params": 411018}
