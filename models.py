@@ -132,6 +132,10 @@ class DeeperHashedMNISTNetBinary(nn.Module):
       return F.log_softmax(x, dim=1)
 
 
+# original GNN code from the following colab notebook:
+# https://colab.research.google.com/drive/1qw1flWPXpm8MZkHlmVKetqgPj03Msjw-#scrollTo=j1aFCogG2XM6
+
+
 class GraphConvLayer(layers.Layer):
     def __init__(
         self,

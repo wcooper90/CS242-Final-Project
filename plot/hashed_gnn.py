@@ -1,7 +1,3 @@
-# original GNN code from the following colab notebook:
-# https://colab.research.google.com/drive/1qw1flWPXpm8MZkHlmVKetqgPj03Msjw-#scrollTo=j1aFCogG2XM6
-
-
 import os
 import pandas as pd
 import numpy as np
@@ -29,6 +25,11 @@ citations["target"] = citations["target"].apply(lambda name: paper_idx[name])
 papers["subject"] = papers["subject"].apply(lambda value: class_idx[value])
 
 
+NUM_HASH_TABLES = 300
+HASH_SIZE = 4
+
+papers = hash_gnn_inputs(HASH_SIZE, NUM_HASH_TABLES, papers)
+
 train_data, test_data = get_train_test_data(papers)
 
 
@@ -51,20 +52,14 @@ x_test = test_data[feature_names].to_numpy()
 y_train = train_data["subject"]
 y_test = test_data["subject"]
 
-baseline_model = create_baseline_model(hidden_units, num_classes, num_features, dropout_rate)
-baseline_model.summary()
-
-start = time.time()
-history = run_experiment(baseline_model, x_train, y_train, learning_rate, num_epochs, batch_size)
-end = time.time()
-total_time = end - start
-print("Baseline NN total training time: " + str(total_time))
-
-
-display_learning_curves(history, 'baseline_nn')
-_, test_accuracy = baseline_model.evaluate(x=x_test, y=y_test, verbose=0)
-print(f"Test accuracy: {round(test_accuracy * 100, 2)}%")
-
+# baseline_model = create_baseline_model(hidden_units, num_classes, dropout_rate)
+# baseline_model.summary()
+#
+# history = run_experiment(baseline_model, x_train, y_train)
+# display_learning_curves(history, 'baseline_nn')
+# _, test_accuracy = baseline_model.evaluate(x=x_test, y=y_test, verbose=0)
+# print(f"Test accuracy: {round(test_accuracy * 100, 2)}%")
+#
 # new_instances = generate_random_instances(num_classes)
 # logits = baseline_model.predict(new_instances)
 # probabilities = keras.activations.softmax(tf.convert_to_tensor(logits)).numpy()
@@ -104,48 +99,9 @@ start = time.time()
 history = run_experiment(gnn_model, x_train, y_train, learning_rate, num_epochs, batch_size)
 end = time.time()
 total_training_time = end - start
-print("Baseline GNN training time: " + str(total_training_time))
+print("LSH GNN training time: " + str(total_training_time))
 
-display_learning_curves(history, 'baseline_gnn')
+display_learning_curves(history, 'hashed_gnn')
 x_test = test_data.paper_id.to_numpy()
 _, test_accuracy = gnn_model.evaluate(x=x_test, y=y_test, verbose=0)
 print(f"Test accuracy: {round(test_accuracy * 100, 2)}%")
-
-
-# First we add the N new_instances as nodes to the graph
-# by appending the new_instance to node_features.
-num_nodes = node_features.shape[0]
-new_node_features = np.concatenate([node_features, new_instances])
-# Second we add the M edges (citations) from each new node to a set
-# of existing nodes in a particular subject
-new_node_indices = [i + num_nodes for i in range(num_classes)]
-new_citations = []
-for subject_idx, group in papers.groupby("subject"):
-    subject_papers = list(group.paper_id)
-    # Select random x papers specific subject.
-    selected_paper_indices1 = np.random.choice(subject_papers, 5)
-    # Select random y papers from any subject (where y < x).
-    selected_paper_indices2 = np.random.choice(list(papers.paper_id), 2)
-    # Merge the selected paper indices.
-    selected_paper_indices = np.concatenate(
-        [selected_paper_indices1, selected_paper_indices2], axis=0
-    )
-    # Create edges between a citing paper idx and the selected cited papers.
-    citing_paper_indx = new_node_indices[subject_idx]
-    for cited_paper_idx in selected_paper_indices:
-        new_citations.append([citing_paper_indx, cited_paper_idx])
-
-new_citations = np.array(new_citations).T
-new_edges = np.concatenate([edges, new_citations], axis=1)
-
-print("Original node_features shape:", gnn_model.node_features.shape)
-print("Original edges shape:", gnn_model.edges.shape)
-gnn_model.node_features = new_node_features
-gnn_model.edges = new_edges
-gnn_model.edge_weights = tf.ones(shape=new_edges.shape[1])
-print("New node_features shape:", gnn_model.node_features.shape)
-print("New edges shape:", gnn_model.edges.shape)
-
-logits = gnn_model.predict(tf.convert_to_tensor(new_node_indices))
-probabilities = keras.activations.softmax(tf.convert_to_tensor(logits)).numpy()
-display_class_probabilities(probabilities)

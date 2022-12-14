@@ -1,3 +1,7 @@
+# original GNN code from the following colab notebook:
+# https://colab.research.google.com/drive/1qw1flWPXpm8MZkHlmVKetqgPj03Msjw-#scrollTo=j1aFCogG2XM6
+
+
 import os
 import pandas as pd
 import numpy as np
@@ -7,8 +11,10 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from lshashpy3 import LSHash
+from tqdm import tqdm
 
 
+# retrieve cora dataset
 def retrieve_data():
     zip_file = keras.utils.get_file(
         fname="cora.tgz",
@@ -16,8 +22,6 @@ def retrieve_data():
         extract=True,
     )
     data_dir = os.path.join(os.path.dirname(zip_file), "cora")
-
-
     citations = pd.read_csv(
         os.path.join(data_dir, "cora.cites"),
         sep="\t",
@@ -25,7 +29,6 @@ def retrieve_data():
         names=["target", "source"],
     )
     print("Citations shape:", citations.shape)
-
     column_names = ["paper_id"] + [f"term_{idx}" for idx in range(1433)] + ["subject"]
     papers = pd.read_csv(
         os.path.join(data_dir, "cora.content"), sep="\t", header=None, names=column_names,
@@ -34,54 +37,40 @@ def retrieve_data():
     return papers, citations
 
 
+# get_hash function, adapted from MLP get_hash function
 def get_hash(lsh, values):
     hashes = []
     planes = lsh.uniform_planes
-
     for plane in planes:
         hash = lsh._hash(plane, values)
-
         hash = list(hash)
-
         for i, val in enumerate(hash):
             hash[i] = int(hash[i])
-
         hashes = hashes + hash
-
     return np.array(hashes)
 
 
+# hash and format cora dataset feature vector values
 def hash_gnn_inputs(hashsize, num_hash_tables, input):
-
 
     # input dimension will always be 1433 for this dataset
     lsh = LSHash(hashsize, 1433, num_hash_tables)
     bruh = input.values.tolist()
-
-
     hashed_values = {}
     label_values = {}
-    for i, value in enumerate(bruh):
+    for i, value in tqdm(enumerate(bruh)):
         hashed_values[value[0]] = get_hash(lsh, value[1:-1])
         label_values[value[0]] = value[-1]
-
-
     new_dict = {}
-
     new_dict['paper_id'] = []
-    for i in range(NUM_HASH_TABLES * HASH_SIZE):
+    for i in range(num_hash_tables * hashsize):
         new_dict['term_' + str(i)] = []
     new_dict['subject'] = []
-
-
     for key in hashed_values.keys():
         new_dict['paper_id'].append(key)
-        for i in range(NUM_HASH_TABLES * HASH_SIZE):
+        for i in range(num_hash_tables * hashsize):
             new_dict['term_' + str(i)].append(hashed_values[key][i])
-
         new_dict['subject'].append(label_values[key])
-
-
     hashed_papers = pd.DataFrame(new_dict)
     print(hashed_papers.head())
     return hashed_papers
@@ -89,7 +78,6 @@ def hash_gnn_inputs(hashsize, num_hash_tables, input):
 
 def get_train_test_data(papers):
     train_data, test_data = [], []
-
     for _, group_data in papers.groupby("subject"):
         # Select around 50% of the dataset for training.
         random_selection = np.random.rand(len(group_data.index)) <= 0.5
@@ -104,18 +92,15 @@ def get_train_test_data(papers):
     return train_data, test_data
 
 
-def run_experiment(model, x_train, y_train):
-    # Compile the model.
+def run_experiment(model, x_train, y_train, learning_rate, num_epochs, batch_size):
     model.compile(
         optimizer=keras.optimizers.Adam(learning_rate),
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
         metrics=[keras.metrics.SparseCategoricalAccuracy(name="acc")],
     )
-    # Create an early stopping callback.
     early_stopping = keras.callbacks.EarlyStopping(
         monitor="val_acc", patience=50, restore_best_weights=True
     )
-    # Fit the model.
     history = model.fit(
         x=x_train,
         y=y_train,
@@ -124,18 +109,15 @@ def run_experiment(model, x_train, y_train):
         validation_split=0.15,
         callbacks=[early_stopping],
     )
-
     return history
 
 
 def create_ffn(hidden_units, dropout_rate, name=None):
     fnn_layers = []
-
     for units in hidden_units:
         fnn_layers.append(layers.BatchNormalization())
         fnn_layers.append(layers.Dropout(dropout_rate))
         fnn_layers.append(layers.Dense(units, activation=tf.nn.gelu))
-
     return keras.Sequential(fnn_layers, name=name)
 
 
@@ -156,17 +138,13 @@ def display_learning_curves(history, fig_name):
     plt.savefig(fig_name + '.png')
 
 
-def create_baseline_model(hidden_units, num_classes, dropout_rate=0.2):
+def create_baseline_model(hidden_units, num_classes, num_features, dropout_rate=0.2):
     inputs = layers.Input(shape=(num_features,), name="input_features")
     x = create_ffn(hidden_units, dropout_rate, name=f"ffn_block1")(inputs)
     for block_idx in range(4):
-        # Create an FFN block.
         x1 = create_ffn(hidden_units, dropout_rate, name=f"ffn_block{block_idx + 2}")(x)
-        # Add skip connection.
         x = layers.Add(name=f"skip_connection{block_idx + 2}")([x, x1])
-    # Compute logits.
     logits = layers.Dense(num_classes, name="logits")(x)
-    # Create the model.
     return keras.Model(inputs=inputs, outputs=logits, name="baseline")
 
 

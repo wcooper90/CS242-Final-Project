@@ -9,6 +9,9 @@ Bitsize=8, num_hash_tables = [1, 5, 10, 30, 50]
 {"preprocessing_time": 16.65064549446106, "training_time": 1540.720678806305, "accuracy": 41.92, "num_params": 272394}
 {"preprocessing_time": 55.74745035171509, "training_time": 1556.0389955043793, "accuracy": 88.03, "num_params": 309258}
 {"preprocessing_time": 149.39766454696655, "training_time": 2191.032813310623, "accuracy": 93.65, "num_params": 391178}
+{"preprocessing_time": 267.78830456733704, "training_time": 2354.9180767536163, "accuracy": 94.49, "num_params": 473098}
 
 
-Bitsize=32, num_hash_tables = [1, 5, 10, 30, 50]
+Bitsize=32, num_hash_tables = [10, 30]
+{"preprocessing_time": 159.0277121067047, "training_time": 2277.7434692382812, "accuracy": 93.99, "num_params": 432138}
+{"preprocessing_time": 678.8665165901184, "training_time": 3997.6044116020203, "accuracy": 94.37, "num_params": 759818}
